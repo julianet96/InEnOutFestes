@@ -3,7 +3,8 @@
     <div class="q-pa-md row items-start q-gutter-md flex flex-center">
 
 
-      <q-card class="my-card " v-for="(bebida,i) in BebidasMenu" :key="i">
+      <q-card class="my-card cursor-pointer q-hoverable" v-for="(bebida,i) in BebidasMenu" @click="OpenBebida(bebida)" :key="i">
+        <span class="q-focus-helper"></span>
             <q-img
             :src= "bebida.Img"
             basic
@@ -39,6 +40,9 @@ export default {
         .catch(err => {
           console.log(err)
         })  
+    },
+    OpenBebida(bebida){
+      console.log(bebida)
     }
   },
   created(){

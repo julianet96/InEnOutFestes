@@ -6,7 +6,7 @@
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
         <q-toolbar-title>
-          <q-avatar>
+          <q-avatar class="q-hoverable cursor-pointer" @click.native="$router.push('/')">
             <img src="../../public/portolg.png">
           </q-avatar>
           Festes del carme
