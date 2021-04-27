@@ -11,7 +11,7 @@ const routes = [
     path: '/Bebida',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Bebida.vue') }
+      { path: '',name: 'bebida', component: () => import('pages/Bebida.vue') }
     ]
   },
   {
@@ -29,5 +29,7 @@ const routes = [
     component: () => import('pages/Error404.vue')
   }
 ]
+
+// Vue.prototype.mesa = this.$router.currentRoute.query.mesa;
 
 export default routes

@@ -6,7 +6,7 @@
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
         <q-toolbar-title>
-          <q-avatar class="q-hoverable cursor-pointer" @click.native="$router.push('/')">
+          <q-avatar class="q-hoverable cursor-pointer" @click.native="$router.push({path: '/', query: { mesa: ''+mesa+'' } })">
             <img src="../../public/portolg.png">
           </q-avatar>
           Festes del carme
@@ -23,14 +23,14 @@
         </q-item-label>
 
         <q-list>
-          <q-item clickable v-ripple @click.native="$router.push('/Comida')">
+          <q-item clickable v-ripple @click.native="$router.push({path: '/Comida', query: { mesa: ''+mesa+'' } })">
               <q-item-section avatar>
                 <q-icon name="lunch_dining" />
               </q-item-section>
               <q-item-section>Comida</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple @click.native="$router.push('/Bebida')">
+          <q-item clickable v-ripple @click.native="$router.push({path: '/Bebida', query: { mesa: ''+mesa+'' } })">
               <q-item-section avatar>
                 <q-icon name="local_drink" />
               </q-item-section>
@@ -60,8 +60,13 @@
 export default {
   data () {
     return {
-      left: false
+      left: false,
+      mesa:0
     }
+  },
+  created(){
+    console.log(this.$router.currentRoute.query.mesa)
+    this.mesa = this.$router.currentRoute.query.mesa
   }
 }
 </script>

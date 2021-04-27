@@ -63,8 +63,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Cancelar" v-close-popup></q-btn>
-          <q-btn flat label="OK" v-close-popup></q-btn>
+          <q-btn flat label="Cancelar" v-close-popup @click="LimpiarVariables()"></q-btn>
+          <q-btn flat label="OK" v-close-popup @click="CreateLineaComanda()"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -85,20 +85,20 @@ export default {
       card: false,
       BebidasMenu:[],
       BebidaSelec:{},
-      lorem: 'Lorem ipsum dolor sit amet,',
       cantidad:1,
       maximizedToggle:true,
       alcohol:13,
       refresco:1,
       alcoholOptions:[],
-      refrescosOptions:[]
+      refrescosOptions:[],
+      mesa:0
       
     }
   },
   methods:{
     GetBebidasMenu(){
       this.$axios
-        .get(globalvars.RestURL +"/GetBebidaMenu")
+        .get(globalvars.RestURL +"/getBebidaMenu")
         .then(res => {
           let resData = res.data.recordset
           this.BebidasMenu = resData
@@ -115,7 +115,7 @@ export default {
     },
     GetBebidasAlcoholDestilado(){
       this.$axios
-      .get(globalvars.RestURL+"/GetBebidasAlcoholDestilado")
+      .get(globalvars.RestURL+"/getBebidasAlcoholDestilado")
       .then(res => {
         let resData = res.data.recordset
         resData.forEach(element => {
@@ -131,7 +131,7 @@ export default {
     },
     GetBebidasRefrescos(){
       this.$axios
-      .get(globalvars.RestURL+"/GetBebidasRefrescos")
+      .get(globalvars.RestURL+"/getBebidasRefrescos")
       .then(res => {
         let resData = res.data.recordset
         resData.forEach(element => {
@@ -144,12 +144,84 @@ export default {
       .catch(err => {
         console.log(err)
       })
+    },
+    LimpiarVariables(){
+      this.cantidad = 1;
+      this.alcohol = 13
+      this.refresco = 1
+    },
+    async CreateLineaComanda(){
+      let idComanda = await this.GetIdComanda()
+
+      let comment = null;
+
+
+
+      switch(this.BebidaSelec.Type){
+        case 'Alcohol-Chupito':
+          comment = '{alcohol:'+ this.alcohol+'}'
+          break;
+        case 'Alcohol-Mezcla':
+          comment = '{alcohol:'+this.alcohol+',refresco:'+this.refresco+'}'
+          break;
+      }
+
+      this.$axios
+          .post(globalvars.RestURL+"/createLineaComanda",{
+            idComanda:idComanda,
+            idComida:null,
+            idBebida:this.BebidaSelec.Id,
+            Comentario:comment,
+            bebidaType:this.BebidaSelec.Type,
+            cantidad: this.cantidad
+          })
+          .then(res => {
+            let result = res.data.recordset[0].Id
+            console.log(result)
+            this.LimpiarVariables()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      
+    },
+    async GetIdComanda(){
+      let result = null;
+      await this.$axios
+      .get(globalvars.RestURL+"/getComandaRellenando",{params:{ mesa: this.mesa }
+        })
+      .then(res => {
+        result = res.data.recordset[0].Id
+        
+        // esto se ignifica que no hay ninguna comanda empezada para esta mesa o en estado rellenando
+        if(result == undefined || result == null){
+          // crearemos una nueva comanda
+          this.$axios
+          .post(globalvars.RestURL+"/createComanda",{
+            Mesa:this.mesa,
+            Estado:0,
+            Hora: new Date(Date.now())
+          })
+          .then(res => {
+            result = res.data.recordset[0].Id
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      
+      return result
     }
   },
   created(){
     this.GetBebidasMenu();
     this.GetBebidasAlcoholDestilado();
     this.GetBebidasRefrescos();
+    this.mesa = this.$router.currentRoute.query.mesa
   }
 }
 </script>
