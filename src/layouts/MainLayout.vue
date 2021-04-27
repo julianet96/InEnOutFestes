@@ -11,7 +11,7 @@
           </q-avatar>
           Festes del carme
         </q-toolbar-title>
-        <q-btn  dense flat round icon="shopping_cart"  />
+        <q-btn  dense flat round icon="shopping_cart" @click.native="$router.push({path: '/Carrito', query: { mesa: ''+mesa+'' } })" />
       </q-toolbar>
       
     </q-header>
@@ -39,7 +39,7 @@
 
           <q-separator/>
 
-          <q-item clickable>
+          <q-item clickable v-ripple @click.native="$router.push({path: '/Carrito', query: { mesa: ''+mesa+'' } })">
               <q-item-section avatar>
                 <q-icon name="shopping_cart" />
               </q-item-section>

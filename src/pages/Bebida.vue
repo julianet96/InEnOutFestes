@@ -102,7 +102,6 @@ export default {
         .then(res => {
           let resData = res.data.recordset
           this.BebidasMenu = resData
-          console.log(resData)
         })
         .catch(err => {
           console.log(err)
@@ -111,7 +110,6 @@ export default {
     OpenBebida(bebida){
       this.BebidaSelec = bebida
       this.card = true
-      console.log(bebida)
     },
     GetBebidasAlcoholDestilado(){
       this.$axios
@@ -152,6 +150,10 @@ export default {
     },
     async CreateLineaComanda(){
       let idComanda = await this.GetIdComanda()
+      if(idComanda == null){
+        
+        idComanda = await this.CreateComanda()
+      }
 
       let comment = null;
 
@@ -177,7 +179,6 @@ export default {
           })
           .then(res => {
             let result = res.data.recordset[0].Id
-            console.log(result)
             this.LimpiarVariables()
           })
           .catch(err => {
@@ -190,13 +191,25 @@ export default {
       await this.$axios
       .get(globalvars.RestURL+"/getComandaRellenando",{params:{ mesa: this.mesa }
         })
-      .then(res => {
-        result = res.data.recordset[0].Id
-        
+      .then(resp => {
+        result = resp.data.recordset
         // esto se ignifica que no hay ninguna comanda empezada para esta mesa o en estado rellenando
-        if(result == undefined || result == null){
+        if(result == undefined || result == null || result.length === 0){
           // crearemos una nueva comanda
-          this.$axios
+          result = null;
+        }else{
+          result = result[0].Id
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      
+      return result
+    },
+    async CreateComanda(){
+      let result = null;
+      await this.$axios
           .post(globalvars.RestURL+"/createComanda",{
             Mesa:this.mesa,
             Estado:0,
@@ -204,16 +217,12 @@ export default {
           })
           .then(res => {
             result = res.data.recordset[0].Id
+            
           })
           .catch(err => {
             console.log(err)
           })
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      
+
       return result
     }
   },

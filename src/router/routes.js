@@ -21,6 +21,13 @@ const routes = [
       { path: '', component: () => import('pages/Comida.vue') }
     ]
   },
+  {
+    path: '/Carrito',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Carrito.vue') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
