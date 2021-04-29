@@ -11,7 +11,7 @@
           </q-avatar>
           Festes del carme
         </q-toolbar-title>
-        <q-btn  dense flat round icon="shopping_cart" @click.native="$router.push({path: '/Carrito', query: { mesa: ''+mesa+'' } })" />
+        <q-btn  dense flat round icon="shopping_cart" @click.native="$router.push({path: '/Carrito', query: { mesa: ''+mesa+'' } })"><q-badge color="red" floating v-text="this.carrito"></q-badge> </q-btn>
       </q-toolbar>
       
     </q-header>
@@ -61,12 +61,28 @@ export default {
   data () {
     return {
       left: false,
-      mesa:0
+      mesa:0,
+      carrito:0
     }
   },
+  methods:{
+      updateBadge () {
+        this.carrito = this.carrito + 1
+        console.log("algoo",this.contador)
+        this.$q.localStorage.set("CarritoNumero", this.carrito)
+      },
+      inicioCarrito () {
+        let carro = this.$q.localStorage.getItem("CarritoNumero")
+        if (carro != null){
+          this.carrito = carro
+        }
+      }
+  },
   created(){
+    this.inicioCarrito()
     console.log(this.$router.currentRoute.query.mesa)
     this.mesa = this.$router.currentRoute.query.mesa
+    this.$root.$on('UpdateBadge', this.updateBadge)
   }
 }
 </script>

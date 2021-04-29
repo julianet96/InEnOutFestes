@@ -149,15 +149,10 @@ export default {
       this.refresco = 1
     },
     async CreateLineaComanda(){
+      this.$root.$emit('UpdateBadge')
       let idComanda = await this.GetIdComanda()
-      if(idComanda == null){
-        
-        idComanda = await this.CreateComanda()
-      }
 
       let comment = null;
-
-
 
       switch(this.BebidaSelec.Type){
         case 'Alcohol-Chupito':
@@ -179,6 +174,7 @@ export default {
           })
           .then(res => {
             let result = res.data.recordset[0].Id
+            this.sumarTotal(this.BebidaSelec.Precio)
             this.LimpiarVariables()
           })
           .catch(err => {
@@ -187,27 +183,17 @@ export default {
       
     },
     async GetIdComanda(){
-      let result = null;
-      await this.$axios
-      .get(globalvars.RestURL+"/getComandaRellenando",{params:{ mesa: this.mesa }
-        })
-      .then(resp => {
-        result = resp.data.recordset
-        // esto se ignifica que no hay ninguna comanda empezada para esta mesa o en estado rellenando
-        if(result == undefined || result == null || result.length === 0){
-          // crearemos una nueva comanda
-          result = null;
-        }else{
-          result = result[0].Id
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
       
+      let result = this.$q.localStorage.getItem("IdComanda")
+      
+      if(result == null){
+        result = await this.CreateComanda()
+      }
+
       return result
     },
     async CreateComanda(){
+      console.log("entro en crear")
       let result = null;
       await this.$axios
           .post(globalvars.RestURL+"/createComanda",{
@@ -217,13 +203,23 @@ export default {
           })
           .then(res => {
             result = res.data.recordset[0].Id
-            
+            this.$q.localStorage.set("IdComanda", result)
           })
           .catch(err => {
             console.log(err)
           })
 
       return result
+    },
+    sumarTotal (precio) {
+      let total = this.$q.localStorage.getItem("TotalComanda")
+      let totalPedido = this.cantidad * precio;
+      if(total = null){
+        total = 0  
+      }
+
+      total = total + totalPedido
+      this.$q.localStorage.set("TotalComanda", total)
     }
   },
   created(){
