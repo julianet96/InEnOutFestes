@@ -119,7 +119,7 @@ export default {
         resData.forEach(element => {
           this.alcoholOptions.push({
             label:element.Nombre,
-            value:element.Id
+            value:element.Nombre
           })
         });
       })
@@ -135,7 +135,7 @@ export default {
         resData.forEach(element => {
           this.refrescosOptions.push({
             label:element.Nombre,
-            value:element.Id
+            value:element.Nombre
           })
         });
       })
@@ -156,10 +156,10 @@ export default {
 
       switch(this.BebidaSelec.Type){
         case 'Alcohol-Chupito':
-          comment = '{alcohol:'+ this.alcohol+'}'
+          comment = this.alcohol
           break;
         case 'Alcohol-Mezcla':
-          comment = '{alcohol:'+this.alcohol+',refresco:'+this.refresco+'}'
+          comment = this.alcohol+' + '+this.refresco
           break;
       }
 
@@ -170,7 +170,8 @@ export default {
             idBebida:this.BebidaSelec.Id,
             Comentario:comment,
             bebidaType:this.BebidaSelec.Type,
-            cantidad: this.cantidad
+            cantidad: this.cantidad,
+            totalLinea: this.cantidad * this.BebidaSelec.Precio
           })
           .then(res => {
             let result = res.data.recordset[0].Id
