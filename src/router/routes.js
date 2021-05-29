@@ -28,7 +28,13 @@ const routes = [
       { path: '', component: () => import('pages/Carrito.vue') }
     ]
   },
-
+  {
+    path: '/login',
+    component: () => import('layouts/FesteroLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Login.vue') }
+    ]
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
