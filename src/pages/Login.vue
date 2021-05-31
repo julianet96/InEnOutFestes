@@ -27,9 +27,11 @@
                             />
                         </template>
                     </q-input>
-                    <div class="row justify-center">
-                        <q-btn label="Enviar" type="submit" color="primary" />
-                    </div>
+
+                    <q-card-actions class="justify-center">
+                        <q-btn label="Enviar" type="submit" color="primary"> </q-btn>
+                        <q-btn label="Cancelar" @click.native="$router.push({path: '/' })" color="negative"> </q-btn>
+                    </q-card-actions>
                 </q-form>
             </q-card-section>
         </q-card>

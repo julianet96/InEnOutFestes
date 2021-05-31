@@ -46,7 +46,16 @@
               <q-item-section>Cesta</q-item-section>
           </q-item>
         </q-list>
+        
       </q-scroll-area>
+      <q-separator/>
+      <q-item clickable v-ripple @click.native="$router.push({path: '/login'})">
+              <q-item-section avatar>
+                <q-icon name="account_circle" />
+              </q-item-section>
+              <q-item-section>Login</q-item-section>
+          </q-item>
+      
     </q-drawer>
 
     <q-page-container>
