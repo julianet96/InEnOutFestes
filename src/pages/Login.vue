@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import globalvars from "../boot/globalvars.js";
 export default {
     data() {
         return {
@@ -50,6 +51,20 @@ export default {
     methods: {
         onSubmit(ev) {
             this.$axios
+          .post(globalvars.RestURL+"/login",{
+            user:this.username,
+            password:this.password,
+            
+          })
+          .then(res => {
+            let result = res.data
+            console.log(result)
+            localStorage.setItem("Token",result.token)
+            this.$router.push({path:"/pedidos"})
+          })
+          .catch(err => {
+            console.log(err)
+          })
         }
     }
 }

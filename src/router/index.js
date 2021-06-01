@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import routes from './routes'
+import axios from 'axios'
+import globalvars from "../boot/globalvars.js";
 
 Vue.use(VueRouter)
 
@@ -24,6 +26,38 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
+  })
+
+  Router.beforeEach((to, from, next) => {
+    console.log(to.path)
+
+    const publicPath = ['/login','/Carrito','/Comida','/Bebida','/','/users']
+    const privatePath = ['/pedidos']
+    
+    let correctPath = publicPath.find(element => element == to.path)
+    
+    if(!correctPath){
+
+      let token = localStorage.getItem('Token')
+
+      if(token){
+        axios.post(globalvars.RestURL+"/verifyToken",{
+          token:token
+        })
+        .then(res => {
+          next()
+        })
+        .catch(err => {
+          next({path:'/login'})
+        })
+      }
+      else{
+        next({path:'/login'})
+      }
+    }
+    else{
+      next();
+    }
   })
 
   return Router

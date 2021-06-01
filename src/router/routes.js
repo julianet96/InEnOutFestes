@@ -42,6 +42,13 @@ const routes = [
       { path: '', component: () => import('pages/Pedidos.vue') }
     ]
   },
+  {
+    path: '/users',
+    component: () => import('layouts/PrivateLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Users.vue') }
+    ]
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
