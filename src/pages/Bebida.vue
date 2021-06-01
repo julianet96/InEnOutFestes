@@ -36,8 +36,25 @@
           <div class="text-subtitle2">Precio: {{BebidaSelec.Precio}} €</div>
         </q-card-section>
         <q-card-section>
-          
-          <q-input filled v-model="cantidad" label="Cantidad:" stack-label type="number"></q-input>
+          <div class="row"  >
+            <q-btn
+              class="column"
+              round
+              color="negative"
+              icon="remove"
+              :disable="this.cantidad <= 1"
+              @click="removeCantidad()"
+            ></q-btn>
+            <div class="q-gutter-y-md column" style="max-width: 80px">
+              <q-input filled v-model="cantidad" label="Cantidad:" readonly > </q-input>
+            </div>
+            <q-btn
+              round
+              color="positive"
+              @click="addCantidad()"
+              icon="add"
+            ></q-btn>
+          </div>
         </q-card-section>
         <q-card-section  v-show="BebidaSelec.Type == 'Alcohol-Chupito' || BebidaSelec.Type == 'Alcohol-Mezcla'">
           <div class="text-subtitle2">Alcohol:</div>
@@ -96,6 +113,12 @@ export default {
     }
   },
   methods:{
+    addCantidad(){
+      this.cantidad = this.cantidad + 1
+    },
+    removeCantidad(){
+      this.cantidad = this.cantidad - 1
+    },
     GetBebidasMenu(){
       this.$axios
         .get(globalvars.RestURL +"/getBebidaMenu")
