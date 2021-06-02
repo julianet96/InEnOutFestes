@@ -238,11 +238,12 @@ export default {
     sumarTotal (precio) {
       let total = this.$q.localStorage.getItem("TotalComanda")
       let totalPedido = this.cantidad * precio;
-      if(total = null){
+      if(total == null){
         total = 0  
       }
 
       total = total + totalPedido
+      console.log("Bebida: "+ total)
       this.$q.localStorage.set("TotalComanda", total)
     }
   },

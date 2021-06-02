@@ -47,6 +47,13 @@
               </q-item-section>
               <q-item-section>Area Camarers</q-item-section>
           </q-item>
+          <q-separator/>
+          <q-item clickable v-ripple @click.native="$router.push({path: '/users' })">
+              <q-item-section avatar>
+                <q-icon name="account_circle" />
+              </q-item-section>
+              <q-item-section>Aministrar Usuarios</q-item-section>
+          </q-item>
 
         </q-list>
         

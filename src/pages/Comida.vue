@@ -56,6 +56,14 @@
             ></q-btn>
           </div>
         </q-card-section>
+        <q-card-section>
+          <div class="text-subtitle2">Quitar componentes:</div>
+          <q-option-group
+            :options="OpcionesExtras"
+            type="checkbox"
+            v-model="sinComponentes"
+          ></q-option-group>
+        </q-card-section>
         
         <q-card-section class="q-pt-none">
           <div class="text-h6">Total: {{ComidaSelec.Precio * cantidad}} €</div>
@@ -86,7 +94,9 @@ export default {
       ComidaSelec:{},
       cantidad:1,
       maximizedToggle:true,
-      mesa:0
+      mesa:0,
+      sinComponentes:[],
+      OpcionesExtras:[]
       
     }
   },
@@ -111,6 +121,42 @@ export default {
     },
     OpenComida(comida){
       this.ComidaSelec = comida
+
+      // En este paso rellenamos las opciones para que puedan eliminar del pedido es decir si no quieren tomate o lechuga etc.
+      switch(comida.Type){
+        case "Hamburgesa":
+          this.OpcionesExtras  = [
+            {
+              label: 'Sin Tomate',
+              value: 'Sin Tomate'
+            },
+            {
+              label: 'Sin Cebolla',
+              value: 'Sin Cebolla'
+            },
+          ]
+        break;
+        case "Perrito":
+          this.OpcionesExtras  = [
+            {
+              label: 'Sin Cebolla',
+              value: 'Sin Cebolla'
+            },
+          ]
+        break;
+        case "Pepito":
+          this.OpcionesExtras  = [
+            {
+              label: 'Sin Tomate',
+              value: 'Sin Tomate'
+            },
+          ]
+        break;
+        default:
+        
+        break;
+      }
+
       this.card = true
     },
     LimpiarVariables(){
@@ -120,16 +166,7 @@ export default {
       this.$root.$emit('UpdateBadge')
       let idComanda = await this.GetIdComanda()
 
-      let comment = null;
-
-      switch(this.ComidaSelec.Type){
-        case 'Alcohol-Chupito':
-          comment = this.alcohol
-          break;
-        case 'Alcohol-Mezcla':
-          comment = this.alcohol+' + '+this.refresco
-          break;
-      }
+      let comment = this.sinComponentes;
 
       this.$axios
           .post(globalvars.RestURL+"/createLineaComanda",{
@@ -142,7 +179,8 @@ export default {
             totalLinea: this.cantidad * this.ComidaSelec.Precio
           })
           .then(res => {
-            let result = res.data.recordset[0].Id
+            let result = res.data
+            console.log(result)
             this.sumarTotal(this.ComidaSelec.Precio)
             this.LimpiarVariables()
           })
@@ -162,7 +200,6 @@ export default {
       return result
     },
     async CreateComanda(){
-      console.log("entro en crear")
       let result = null;
       await this.$axios
           .post(globalvars.RestURL+"/createComanda",{
@@ -181,13 +218,16 @@ export default {
       return result
     },
     sumarTotal (precio) {
+      console.log(precio)
       let total = this.$q.localStorage.getItem("TotalComanda")
+      
       let totalPedido = this.cantidad * precio;
-      if(total = null){
+      if(total == null){
         total = 0  
       }
 
       total = total + totalPedido
+      console.log("Comida: " + total)
       this.$q.localStorage.set("TotalComanda", total)
     }
   },

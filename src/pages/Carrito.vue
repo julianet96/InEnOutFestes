@@ -22,6 +22,10 @@
             <div class="test">Cantidad: {{linea.Cantidad}}</div>
             
           </q-item-section>
+          <q-item-section>
+            <div class="test">Total: {{linea.TotalLinea}} €</div>
+            
+          </q-item-section>
 
           <q-item-section side>
           <q-btn flat round color="red" icon="clear" @click="eliminarLineaComanda(linea)"></q-btn>
@@ -34,6 +38,7 @@
         <q-toolbar-title >
           Total: {{this.totalPedido}} €
         </q-toolbar-title>
+        <q-btn  dense color="positive"  icon="check" >Confirmar Pedido</q-btn>
       </q-toolbar>
     </q-footer>
 
