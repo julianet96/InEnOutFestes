@@ -88,6 +88,10 @@ export default {
         if (carro != null){
           this.carrito = carro
         }
+      },
+      removeBadge(){
+        this.$q.localStorage.remove('CarritoNumero')
+        this.carrito = 0
       }
   },
   created(){
@@ -96,6 +100,7 @@ export default {
     this.mesa = this.$router.currentRoute.query.mesa
     this.$root.$on('UpdateBadge', this.updateBadge)
     this.$root.$on('SubtractBadge', this.subtractBadge)
+    this.$root.$on('removeBadge',this.removeBadge)
   }
 }
 </script>

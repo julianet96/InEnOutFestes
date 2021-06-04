@@ -38,9 +38,28 @@
         <q-toolbar-title >
           Total: {{this.totalPedido}} €
         </q-toolbar-title>
-        <q-btn  dense color="positive"  icon="check" >Confirmar Pedido</q-btn>
+        <q-btn  dense color="positive" v-show="lineasComanda.length != 0"  icon="check" @click="SendComanda()" >Confirmar Pedido</q-btn>
       </q-toolbar>
     </q-footer>
+
+    <q-dialog v-model="alert">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Pedido Confirmado</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Gracias por su pedido en breves le atendera un camarero.
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+
+
 
     </div>
 
@@ -56,11 +75,33 @@ export default {
       mesa:0,
       lineasComanda:[],
       comanda:0,
-      totalPedido:1
+      totalPedido:1,
+      alert:false
       
     }
   },
   methods:{
+    async SendComanda(){
+      await this.$axios
+      .post(globalvars.RestURL+"/UpdateComanda",{
+            Total:this.totalPedido,
+            Estado:1,
+            Id:this.comanda
+          })
+      .then(resp => {
+        this.$socket.emit('realizarPedido',{IdComanda: this.comanda})
+        this.lineasComanda = []
+        this.$q.localStorage.remove("IdComanda")
+        this.$q.localStorage.remove("TotalComanda")
+        this.totalPedido = 0;
+        this.$root.$emit('removeBadge')
+        this.alert = true
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      
+    },
     async getLineasComanda (comanda) {
       await this.$axios
       .get(globalvars.RestURL+"/getLineasComanda",{params:{idComanda:comanda}})
@@ -101,6 +142,11 @@ export default {
     this.comanda = this.$q.localStorage.getItem("IdComanda")
     this.getLineasComanda(this.comanda)
     this.totalPedido = this.$q.localStorage.getItem("TotalComanda") ?? 0
+  },
+  mounted(){
+    this.$socket.on('chat-message', (msg) => {
+      console.log(msg)
+    })
   }
 }
 </script>

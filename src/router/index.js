@@ -5,6 +5,11 @@ import routes from './routes'
 import axios from 'axios'
 import globalvars from "../boot/globalvars.js";
 
+import { io } from "socket.io-client";
+const socket = io('http://localhost:3000');
+
+Vue.prototype.$socket = socket
+
 Vue.use(VueRouter)
 
 /*

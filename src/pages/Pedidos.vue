@@ -1,6 +1,15 @@
 <template>
   
-    <div class="q-pa-md row items-start q-gutter-md flex flex-center">
+    <div class="q-pa-md ">
+
+      <q-table
+      title="Pedidos Pendiente Pago"
+      :data="Pedidos"
+      :columns="columns"
+      row-key="name"
+      dark
+      color="amber"
+    ></q-table>
     
      
 
@@ -12,6 +21,12 @@ export default {
   data () {
     return{
       name: 'PageIndex',
+      columns:[
+        {
+
+        }
+      ],
+      Pedidos:[]
       
     }
   },
@@ -20,6 +35,11 @@ export default {
   },
   created (){
     
+  },
+  mounted(){
+    this.$socket.on('pedidoChiringo', (msg) => {
+      console.log(msg)
+    })
   }
 }
 </script>
