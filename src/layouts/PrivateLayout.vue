@@ -38,14 +38,27 @@
               <q-item-section avatar>
                 <q-icon name="local_pizza" />
               </q-item-section>
-              <q-item-section>Pedidos Cuina</q-item-section>
+              <q-item-section>Pedidos Cocina</q-item-section>
           </q-item>
           <q-separator/>
             <q-item clickable v-ripple @click.native="$router.push({path: '' })">
               <q-item-section avatar>
                 <q-icon name="emoji_people" />
               </q-item-section>
-              <q-item-section>Area Camarers</q-item-section>
+              <q-item-section>Area Camareros</q-item-section>
+          </q-item>
+          <q-separator/>
+          <q-item clickable v-ripple @click.native="$router.push({path: '/stockBebida' })">
+              <q-item-section avatar>
+                <q-icon name="local_drink" />
+              </q-item-section>
+              <q-item-section>Stock Bebidas</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click.native="$router.push({path: '/stockComida' })">
+              <q-item-section avatar>
+                <q-icon name="lunch_dining" />
+              </q-item-section>
+              <q-item-section>Stock Comidas</q-item-section>
           </q-item>
           <q-separator/>
           <q-item clickable v-ripple @click.native="$router.push({path: '/users' })">

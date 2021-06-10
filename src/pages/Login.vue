@@ -66,6 +66,13 @@ export default {
             console.log(err)
           })
         }
+    },
+    created(){
+        var item = localStorage.getItem("Token")
+        console.log(item)
+        if(item != null && item != undefined){
+            this.$router.push({path:"/pedidos"})
+        }
     }
 }
 </script>

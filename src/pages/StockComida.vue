@@ -3,8 +3,8 @@
     <div class="q-pa-md ">
 
       <q-table
-      title="Pedidos Pendiente Pago"
-      :data="Pedidos"
+      title="Stock Comida"
+      :data="Comidas"
       :columns="columns"
       row-key="Id"
       dark
@@ -14,14 +14,17 @@
       >
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td key="Mesa" :props="props">
-            {{ props.row.Mesa }}
+          <q-td key="Nombre" :props="props">
+            {{ props.row.Nombre }}
           </q-td>
-          <q-td key="Total" :props="props">
-            {{ props.row.Total }} €
+          <q-td key="Precio" :props="props">
+            {{ props.row.Precio }} €
           </q-td>
-          <q-td key="acctions" :props="props">
-            <q-btn color="amber" @click="ConfirmarPago(props.row)" glossy label="Confirmar"></q-btn>
+          <q-td key="Type" :props="props">
+            {{ props.row.Type }}
+          </q-td>
+          <q-td key="Stock" :props="props">
+              <q-toggle v-model="props.row.Stock" @input="ConfirmarCambioStok(props.row)" color="green"></q-toggle>
           </q-td>
         </q-tr>
       </template>
@@ -33,15 +36,15 @@
     <q-dialog v-model="alert">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Pago Confirmado</div>
+          <div class="text-h6">Cuidado</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          Estas seguro que deseas Confirmar este Pago
+          Vas a modificar el Stock estas seguro?
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn glossy @click="realizarPago()" label="Si" color="primary" v-close-popup></q-btn>
+          <q-btn glossy @click="CambiarStock()" label="Si" color="primary" v-close-popup></q-btn>
           <q-btn glossy label="No" color="deep-orange" v-close-popup></q-btn>
         </q-card-actions>
       </q-card>
@@ -60,50 +63,62 @@ export default {
       alert:false,
       columns:[
         {
-          name: 'Mesa',
-          label: 'Mesa',
+          name: 'Nombre',
+          label: 'Nombre',
           align: 'center'
         },
         {
-          name: 'Total',
-          label: 'Total',
+          name: 'Precio',
+          label: 'Precio',
           align: 'center'
         },
         {
-          name: 'acctions',
-          label: 'Confirmar Pago',
+          name: 'Type',
+          label: 'Tipo',
+          align: 'center'
+        },
+        {
+          name: 'Stock',
+          label: 'Stock',
           align: 'center'
         }
       ],
-      Pedidos:[],
-      ComandaModificando:{}
+      Comidas:[],
+      ComidaModificada:{}
     }
   },
   methods:{
-    async getComandasPendientePago() {
+    async getTodasComidas() {
       this.$axios
-      .get(globalvars.RestURL +"/getComandaPendientePago")
+      .get(globalvars.RestURL +"/getTodoComida")
       .then(res =>{
         console.log(res.data.recordset)
-        this.Pedidos = res.data.recordset
+        this.Comidas = res.data.recordset
       })
       .catch(err => {
         console.log(err)
       })
     },
-    ConfirmarPago(props) {
-      this.ComandaModificando = props
+    ConfirmarCambioStok(props) {
+        console.log(props)
+      this.ComidaModificada = props
       this.alert = true;
     },
-    realizarPago(){
+    CambiarStock(){
+
+        let stock = 0;
+        if(this.ComidaModificada.Stock){
+            stock = 1
+        }
+
       this.$axios
-          .post(globalvars.RestURL+"/changeStatusComanda",{
-            Estado:2,
-            Id:this.ComandaModificando.Id
+          .post(globalvars.RestURL+"/UpdateStockComida",{
+            Stock:stock,
+            Id:this.ComidaModificada.Id
           })
           .then(res => {
             console.log(res)
-            this.getComandasPendientePago();
+            this.getTodasComidas();
           })
           .catch(err => {
             console.log(err)
@@ -112,12 +127,8 @@ export default {
     
   },
   created (){
-    this.getComandasPendientePago();
-  },
-  mounted(){
-    this.$socket.on('pedidoChiringo', (msg) => {
-      console.log(msg)
-    })
+    this.getTodasComidas();
   }
+  
 }
 </script>

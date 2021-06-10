@@ -43,6 +43,20 @@ const routes = [
     ]
   },
   {
+    path: '/stockBebida',
+    component: () => import('layouts/PrivateLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/StockBebida.vue') }
+    ]
+  },
+  {
+    path: '/stockComida',
+    component: () => import('layouts/PrivateLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/StockComida.vue') }
+    ]
+  },
+  {
     path: '/users',
     component: () => import('layouts/PrivateLayout.vue'),
     children: [
