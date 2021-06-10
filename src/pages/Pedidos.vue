@@ -104,6 +104,7 @@ export default {
           .then(res => {
             console.log(res)
             this.getComandasPendientePago();
+            this.$socket.emit('cambioEstadoCoBa',{})
           })
           .catch(err => {
             console.log(err)
@@ -116,7 +117,7 @@ export default {
   },
   mounted(){
     this.$socket.on('pedidoChiringo', (msg) => {
-      console.log(msg)
+      this.getComandasPendientePago()
     })
   }
 }
