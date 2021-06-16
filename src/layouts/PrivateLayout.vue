@@ -28,13 +28,13 @@
               </q-item-section>
               <q-item-section>Pedidos Chiringuito</q-item-section>
           </q-item>
-          <q-item clickable v-ripple @click.native="$router.push({path: '' })">
+          <q-item clickable v-ripple @click.native="$router.push({path: '/barra' })">
               <q-item-section avatar>
                 <q-icon name="liquor" />
               </q-item-section>
               <q-item-section>Pedidos Barra</q-item-section>
           </q-item>
-          <q-item clickable v-ripple @click.native="$router.push({path: '' })">
+          <q-item clickable v-ripple @click.native="$router.push({path: '/cocina' })">
               <q-item-section avatar>
                 <q-icon name="local_pizza" />
               </q-item-section>

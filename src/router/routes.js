@@ -63,6 +63,20 @@ const routes = [
       { path: '', component: () => import('pages/Users.vue') }
     ]
   },
+  {
+    path: '/cocina',
+    component: () => import('layouts/PrivateLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Cocina.vue') }
+    ]
+  },
+  {
+    path: '/barra',
+    component: () => import('layouts/PrivateLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Barra.vue') }
+    ]
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

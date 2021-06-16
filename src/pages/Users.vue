@@ -48,6 +48,7 @@
                       outlined 
                       v-model="type" 
                       emit-value 
+                      
                       :options="typeOptions" 
                       :option-value="opt => Object(opt) === opt && 'value' in opt ? opt.value : null"
                       :option-label="opt => Object(opt) === opt && 'label' in opt ? opt.label : '- Null -'"

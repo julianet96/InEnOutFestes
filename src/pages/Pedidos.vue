@@ -104,7 +104,7 @@ export default {
           .then(res => {
             console.log(res)
             this.getComandasPendientePago();
-            this.$socket.emit('cambioEstadoCoBa',{})
+            this.$socket.emit('cambioEstadoCoBa',{res})
           })
           .catch(err => {
             console.log(err)
